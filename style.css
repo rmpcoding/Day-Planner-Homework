@@ -27,7 +27,9 @@ h2 {
 }
 
 table {
+  table-layout: fixed;
   width: 100%;
+  justify-content: center;
 }
 
 table, th, td {
@@ -61,6 +63,13 @@ input {
   border-radius: .6rem;
 }
 
+/* this will change after time has passed. */
+  /* background-color: #95afc0; */
+
+/* this will change if it's current time */
+  /* background-color: #dff9fb; */
+
+/* White will appear if time has not passed */
 
 
 
