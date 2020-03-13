@@ -1,6 +1,6 @@
 // Clicking on the save button will store the time and user input in localStorage.
 
-// variables for DOM manipulation
+// Variables for DOM manipulation
 // ===========================================================================
 const currentTime = document.createTextNode(
     moment().format('dddd, MMMM Do YYYY, h:mm a')
@@ -12,7 +12,7 @@ const targetInputFieldsOnly = document.body.getElementsByClassName(
     'input-field'
 );
 const targetAllIcons = document.body.getElementsByClassName('fa-save');
-const hour = moment().toObject().hours;
+const currentHour = moment().toObject().hours;
 let resultsArr = [];
 let array = [];
 let setTask;
@@ -24,36 +24,37 @@ let appendText;
 let createText;
 let currentTarget;
 
-// time shown on header
+// Time shown on top of page header.
 // ===========================================================================
 targetCurrentTime.append(currentTime);
 
-// functions for dynamically styled time slots for current hour
+// Coloring in time slots depending on current hour of day.
 // ===========================================================================
-const targetInputStyleByCurrentHour = indexOfInputField => {
-    target = targetDOMTableRows[indexOfInputField].cells[1].children[0];
-    target.style.backgroundColor = '#f9ca24';
-};
 
-// functions for dynamically styled time slots for passed hours
-// ===========================================================================
-// first for loop conditional grays out the input fields which passed
-// second for loop conditional resets input fields style to white outside of business hours.
-
-const hasHourPassed = (timeslot, indexOfInputField) => {
-    if (hour > timeslot) {
-        for (let i = indexOfInputField; i >= 1; i--) {
+const hasHourPassed = (businessHour, timeSlot) => {
+    if (currentHour > businessHour) {
+        for (let i = timeSlot; i >= 1; i--) {
             targetDOMTableRows[i].cells[1].children[0].style.backgroundColor =
-                '#95afc0';
+                '#95afc0'; //timeslot grays out after current hour passes
         }
-    } else if ((hour >= 18 && hour <= 24) || (hour >= 1 && hour <= 8)) {
+    } else if (
+        (currentHour >= 18 && currentHour <= 24) ||
+        (currentHour >= 1 && currentHour <= 8)
+    ) {
         for (let i = 0; i < targetInputFieldsOnly.length; i++) {
-            console.log(targetInputFieldsOnly[i]);
-            targetInputFieldsOnly[i].style.backgroundColor = 'white';
+            targetInputFieldsOnly[i].style.backgroundColor = 'white'; //timeslot turns white outside of business hours.
         }
     }
 };
 
+// functions for dynamically styled time slots for current hour
+// ===========================================================================
+const targetInputStyleByCurrentHour = timeSlot => {
+    target = targetDOMTableRows[timeSlot].cells[1].children[0];
+    target.style.backgroundColor = '#f9ca24'; //timeslot turns yellow during current business hour.
+};
+
+// First param equates business hour; second param equates corresponding time slot.
 hasHourPassed(9, 1);
 hasHourPassed(10, 2);
 hasHourPassed(11, 3);
@@ -64,7 +65,7 @@ hasHourPassed(15, 7);
 hasHourPassed(16, 8);
 hasHourPassed(17, 9);
 
-switch (hour) {
+switch (currentHour) {
     case 9:
         targetInputStyleByCurrentHour(1);
         break;
@@ -99,22 +100,36 @@ switch (hour) {
 // targets all icons to save on click
 // ===========================================================================
 const saveButtonOnClick = () => {
-    for (let i = 0; i < targetAllIcons.length; i++) {
-        targetAllIcons[i].addEventListener('click', () => {
-            getTask = JSON.parse(localStorage.getItem('task'));
-            currentTarget = targetInputFieldsOnly[i];
-            textValue = currentTarget.value;
-            createText = currentTarget.innerHTML = textValue;
-
-            // set to local storage;
-            setTask = JSON.stringify(localStorage.setItem('task', createText));
-            resultsArr.push(JSON.parse(localStorage.getItem('task')));
-            array.push({ task: createText });
-            resultsArr.push(setTask);
-            getTask = localStorage.getItem('task');
-            getTask;
-        });
-    }
+    targetAllIcons[0].addEventListener('click', event => {
+        console.log(event);
+        console.log(targetInputFieldsOnly[0].value);
+        setTask = JSON.stringify(
+            localStorage.setItem('task', targetInputFieldsOnly[0].value)
+        );
+    });
 };
 
 saveButtonOnClick();
+
+const getItemOnClick = () => {
+  getTask = localStorage.getItem('task');
+  console.log(localStorage.getItem('task'));
+  targetInputFieldsOnly[0].textContent = getTask;
+}
+
+// for (let i = 0; i < targetAllIcons.length; i++) {
+//     targetAllIcons[i].addEventListener('click', () => {
+//         getTask = JSON.parse(localStorage.getItem('task'));
+//         currentTarget = targetInputFieldsOnly[i];
+//         textValue = currentTarget.value;
+//         createText = currentTarget.innerHTML = textValue;
+
+//         // set to local storage;
+//         setTask = JSON.stringify(localStorage.setItem('task', createText));
+//         resultsArr.push(JSON.parse(localStorage.getItem('task')));
+//         array.push({ task: createText });
+//         resultsArr.push(setTask);
+//         getTask = localStorage.getItem('task');
+//         getTask;
+//     });
+// }
