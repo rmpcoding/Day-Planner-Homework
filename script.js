@@ -11,7 +11,7 @@ const targetDOMTableRows = targetDOMTableParent[0].rows;
 const targetInputFieldsOnly = document.body.getElementsByClassName(
     'input-field'
 );
-const targetAllIcons = document.body.getElementsByClassName('fa-save');
+const targetSaveIcons = document.body.getElementsByClassName('fa-save');
 const currentHour = moment().toObject().hours;
 let resultsArr = [];
 let array = [];
@@ -23,6 +23,8 @@ let textValue;
 let appendText;
 let createText;
 let currentTarget;
+let exists;
+let addDataToLocalStorage;
 
 // Time shown on top of page header.
 // ===========================================================================
@@ -99,26 +101,39 @@ switch (currentHour) {
 
 // targets all icons to save on click
 // ===========================================================================
-const saveButtonOnClick = () => {
-    targetAllIcons[0].addEventListener('click', event => {
-        console.log(event);
-        console.log(targetInputFieldsOnly[0].value);
-        setTask = JSON.stringify(
-            localStorage.setItem('task', targetInputFieldsOnly[0].value)
-        );
-    });
+
+const saveButton = () => {
+
+    console.log(document.body.querySelectorAll('.fa-save'));
+    console.log(targetSaveIcons[0].dataset.saveIconId); // = data's value
+
+    const save = document.body.querySelectorAll('.fa-save')
+    save.forEach(element => {
+        element.addEventListener('click', event => {
+            exists = localStorage.getItem('task');
+            exists = exists ? exists.split(',') : [];
+            exists.push(targetInputFieldsOnly[0].value); //WORK HEREERERERERE
+            JSON.stringify(localStorage.setItem('task', exists));
+
+            console.log(event.target.dataset.saveIconId);
+            
+            setTime = JSON.stringify(localStorage.setItem('time', currentHour));
+            console.log(localStorage);
+        })
+    })
 };
 
-saveButtonOnClick();
+saveButton();
 
 const getItemOnClick = () => {
-  getTask = localStorage.getItem('task');
-  console.log(localStorage.getItem('task'));
-  targetInputFieldsOnly[0].textContent = getTask;
-}
+    getTask = localStorage.getItem('task');
+    console.log(localStorage.getItem('task'));
+    alert(`${localStorage.getItem('task')} at this time 
+    ${localStorage.getItem('time')}`);
+};
 
-// for (let i = 0; i < targetAllIcons.length; i++) {
-//     targetAllIcons[i].addEventListener('click', () => {
+// for (let i = 0; i < targetSaveIcons.length; i++) {
+//     targetSaveIcons[i].addEventListener('click', () => {
 //         getTask = JSON.parse(localStorage.getItem('task'));
 //         currentTarget = targetInputFieldsOnly[i];
 //         textValue = currentTarget.value;
