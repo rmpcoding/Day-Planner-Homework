@@ -23,7 +23,6 @@ let textValue;
 let appendText;
 let createText;
 let currentTarget;
-let exists;
 let addDataToLocalStorage;
 
 // Time shown on top of page header.
@@ -103,24 +102,34 @@ switch (currentHour) {
 // ===========================================================================
 
 const saveButton = () => {
+    const saveIcons = document.body.querySelectorAll('.fa-save');
+    let taskData;
+    let timeData;
+    let inputValues;
+    let inputValueTime;
 
-    console.log(document.body.querySelectorAll('.fa-save'));
-    console.log(targetSaveIcons[0].dataset.saveIconId); // = data's value
+    saveIcons.forEach(saveIcon => {
+        saveIcon.addEventListener('click', event => {
+            // push into task array
+            // ========================================================================
+            taskData = localStorage.getItem('task');
+            taskData = taskData ? taskData.split(',') : [];
+            inputValues = document.body.querySelectorAll(
+                `.input-field[data-save-icon-id="${event.target.dataset.saveIconId}"]`
+            );
+            taskData.push(inputValues[0].value);
+            JSON.stringify(localStorage.setItem('task', taskData));
 
-    const save = document.body.querySelectorAll('.fa-save')
-    save.forEach(element => {
-        element.addEventListener('click', event => {
-            exists = localStorage.getItem('task');
-            exists = exists ? exists.split(',') : [];
-            exists.push(targetInputFieldsOnly[0].value); //WORK HEREERERERERE
-            JSON.stringify(localStorage.setItem('task', exists));
-
-            console.log(event.target.dataset.saveIconId);
-            
-            setTime = JSON.stringify(localStorage.setItem('time', currentHour));
+            // push into time array
+            // ========================================================================
+            inputValueTime = inputValues[0].dataset.saveIconId;
+            timeData = localStorage.getItem('time');
+            timeData = timeData ? timeData.split(',') : [];
+            timeData.push(inputValueTime);
+            JSON.stringify(localStorage.setItem('time', timeData));
             console.log(localStorage);
-        })
-    })
+        });
+    });
 };
 
 saveButton();
@@ -131,6 +140,8 @@ const getItemOnClick = () => {
     alert(`${localStorage.getItem('task')} at this time 
     ${localStorage.getItem('time')}`);
 };
+
+//targets corresponding data attribute on html to push into local storage array
 
 // for (let i = 0; i < targetSaveIcons.length; i++) {
 //     targetSaveIcons[i].addEventListener('click', () => {
