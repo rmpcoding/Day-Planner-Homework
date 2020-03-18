@@ -1,29 +1,17 @@
-// Clicking on the save button will store the time and user input in localStorage.
-
 // Variables for DOM manipulation
 // ===========================================================================
 const currentTime = document.createTextNode(
     moment().format('dddd, MMMM Do YYYY, h:mm a')
 );
 const targetCurrentTime = document.body.querySelector('.current-time-h2');
-const targetDOMTableParent = document.body.getElementsByTagName('table');
-const targetDOMTableRows = targetDOMTableParent[0].rows;
+const targetDOMTableParent = document.body.getElementsByTagName('table'); //for table style color
+const targetDOMTableRows = targetDOMTableParent[0].rows; //for table style color
 const targetInputFieldsOnly = document.body.getElementsByClassName(
     'input-field'
-);
-const targetSaveIcons = document.body.getElementsByClassName('fa-save');
+); //for table style color
 const currentHour = moment().toObject().hours;
-let resultsArr = [];
-let array = [];
-let setTask;
-let getTask;
 let target;
-let timePassed;
-let textValue;
-let appendText;
-let createText;
-let currentTarget;
-let addDataToLocalStorage;
+let getTask;
 
 // Time shown on top of page header.
 // ===========================================================================
@@ -133,29 +121,3 @@ const saveButton = () => {
 };
 
 saveButton();
-
-const getItemOnClick = () => {
-    getTask = localStorage.getItem('task');
-    console.log(localStorage.getItem('task'));
-    alert(`${localStorage.getItem('task')} at this time 
-    ${localStorage.getItem('time')}`);
-};
-
-//targets corresponding data attribute on html to push into local storage array
-
-// for (let i = 0; i < targetSaveIcons.length; i++) {
-//     targetSaveIcons[i].addEventListener('click', () => {
-//         getTask = JSON.parse(localStorage.getItem('task'));
-//         currentTarget = targetInputFieldsOnly[i];
-//         textValue = currentTarget.value;
-//         createText = currentTarget.innerHTML = textValue;
-
-//         // set to local storage;
-//         setTask = JSON.stringify(localStorage.setItem('task', createText));
-//         resultsArr.push(JSON.parse(localStorage.getItem('task')));
-//         array.push({ task: createText });
-//         resultsArr.push(setTask);
-//         getTask = localStorage.getItem('task');
-//         getTask;
-//     });
-// }
