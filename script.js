@@ -9,17 +9,16 @@ const targetDOMTableRows = targetDOMTableParent[0].rows; //for table style color
 const targetInputFieldsOnly = document.body.getElementsByClassName(
     'input-field'
 ); //for table style color
+const targetSaveIcons = document.body.querySelectorAll('.fa-save');
 const currentHour = moment().toObject().hours;
-let target;
-let getTask;
+let targetCurrentHourTimeSlot;
 
 // Time shown on top of page header.
 // ===========================================================================
 targetCurrentTime.append(currentTime);
 
-// Coloring in time slots depending on current hour of day.
+// Function to style time slots depending on hour and if it passed already
 // ===========================================================================
-
 const hasHourPassed = (businessHour, timeSlot) => {
     if (currentHour > businessHour) {
         for (let i = timeSlot; i >= 1; i--) {
@@ -36,13 +35,6 @@ const hasHourPassed = (businessHour, timeSlot) => {
     }
 };
 
-// functions for dynamically styled time slots for current hour
-// ===========================================================================
-const targetInputStyleByCurrentHour = timeSlot => {
-    target = targetDOMTableRows[timeSlot].cells[1].children[0];
-    target.style.backgroundColor = '#f9ca24'; //timeslot turns yellow during current business hour.
-};
-
 // First param equates business hour; second param equates corresponding time slot.
 hasHourPassed(9, 1);
 hasHourPassed(10, 2);
@@ -53,6 +45,14 @@ hasHourPassed(14, 6);
 hasHourPassed(15, 7);
 hasHourPassed(16, 8);
 hasHourPassed(17, 9);
+
+// Function to style time slots for current hour, used for switch case
+// ===========================================================================
+const targetInputStyleByCurrentHour = timeSlot => {
+    targetCurrentHourTimeSlot =
+        targetDOMTableRows[timeSlot].cells[1].children[0];
+    targetCurrentHourTimeSlot.style.backgroundColor = '#f9ca24'; //timeslot turns yellow during current business hour.
+};
 
 switch (currentHour) {
     case 9:
@@ -86,18 +86,17 @@ switch (currentHour) {
         break;
 }
 
-// targets all icons to save on click
+// Saves into local storage
 // ===========================================================================
-
 const saveButton = () => {
-    const saveIcons = document.body.querySelectorAll('.fa-save');
     let taskData;
     let timeData;
     let inputValues;
     let inputValueTime;
+    let appendValueToInputField;
 
-    saveIcons.forEach(saveIcon => {
-        saveIcon.addEventListener('click', event => {
+    targetSaveIcons.forEach(targetSaveIcon => {
+        targetSaveIcon.addEventListener('click', event => {
             // push into task array
             // ========================================================================
             taskData = localStorage.getItem('task');
@@ -108,6 +107,8 @@ const saveButton = () => {
             taskData.push(inputValues[0].value);
             JSON.stringify(localStorage.setItem('task', taskData));
 
+            inputValues[0].textContent = taskData; //appends to input field
+
             // push into time array
             // ========================================================================
             inputValueTime = inputValues[0].dataset.saveIconId;
@@ -116,8 +117,8 @@ const saveButton = () => {
             timeData.push(inputValueTime);
             JSON.stringify(localStorage.setItem('time', timeData));
             console.log(localStorage);
+            // on page refresh event, load local storage items
         });
     });
 };
-
 saveButton();
