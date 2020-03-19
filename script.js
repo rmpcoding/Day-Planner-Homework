@@ -99,26 +99,40 @@ const saveButton = () => {
         targetSaveIcon.addEventListener('click', event => {
             // push into task array
             // ========================================================================
-            taskData = localStorage.getItem('task');
-            taskData = taskData ? taskData.split(',') : [];
+            taskData = JSON.parse(localStorage.getItem('task'));
+            taskData = taskData ? taskData : [];
             inputValues = document.body.querySelectorAll(
                 `.input-field[data-save-icon-id="${event.target.dataset.saveIconId}"]`
             );
             taskData.push(inputValues[0].value);
-            JSON.stringify(localStorage.setItem('task', taskData));
+            localStorage.setItem('task', JSON.stringify(taskData));
 
             inputValues[0].textContent = taskData; //appends to input field
 
             // push into time array
             // ========================================================================
             inputValueTime = inputValues[0].dataset.saveIconId;
-            timeData = localStorage.getItem('time');
-            timeData = timeData ? timeData.split(',') : [];
+            timeData = JSON.parse(localStorage.getItem('time'));
+            timeData = timeData ? timeData : [];
             timeData.push(inputValueTime);
-            JSON.stringify(localStorage.setItem('time', timeData));
+            localStorage.setItem('time', JSON.stringify(timeData));
             console.log(localStorage);
             // on page refresh event, load local storage items
         });
     });
 };
 saveButton();
+
+const onRefresh = () => {
+    let taskData;
+    let timeData;
+    let inputValues;
+    if (performance.navigation.type === 1) {
+        console.log(localStorage);
+        taskData = localStorage.getItem('task');
+        timeData = JSON.parse(localStorage.getItem('time'));
+        inputValues = document.body.querySelectorAll('.input-field');
+            inputValues[0].value = taskData;
+    } else return console.log("Thank you for visiting this page :)");
+};
+onRefresh();
